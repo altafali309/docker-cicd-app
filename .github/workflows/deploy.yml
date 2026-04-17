@@ -6,15 +6,28 @@ on:
       - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Build Docker image
-        run: docker build -t cicd-app .
-
-      - name: Run container
-        run: docker run -d -p 5000:80 cicd-app
+      - name: SSH into EC2 and deploy
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd ~
+            if [ ! -d "docker-cicd-app" ]; then
+              git clone https://github.com/altafali309/docker-cicd-app.git
+            else
+              cd docker-cicd-app && git pull
+            fi
+            cd docker-cicd-app
+            docker stop cicd-container || true
+            docker rm cicd-container || true
+            docker build -t cicd-app .
+            docker run -d -p 80:80 --name cicd-container cicd-app
