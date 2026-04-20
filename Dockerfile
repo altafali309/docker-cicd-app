@@ -1,5 +1,5 @@
-FROM nginx:latest
+FROM apache2:latest
 
-COPY app/ /usr/share/nginx/html
+COPY app/ /var/www/html/
 
 HEALTHCHECK CMD curl --fail http://localhost || exit 1
