@@ -1,4 +1,4 @@
-FROM apache2:latest
+FROM httpd:latest
 
 COPY app/ /var/www/html/
 
