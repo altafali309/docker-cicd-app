@@ -1,32 +1,26 @@
-# 🚀 Docker CI/CD Project (AWS Deployment)
+# 🚀 Docker CI/CD Deployment on AWS
 
-So basically, in this project I built a simple website and deployed it using Docker and AWS, but the main focus was learning how CI/CD actually works in real life.
+This project demonstrates a complete CI/CD pipeline where a Dockerized web application is automatically deployed to an AWS EC2 instance using GitHub Actions.
 
-Whenever I push code to GitHub, it automatically builds and deploys the app on my AWS EC2 instance. No manual work.
+Whenever code is pushed to the repository, the pipeline builds and deploys the updated application without any manual intervention.
 
 ---
 
-## 🧠 What this project does
+## 🧠 Project Overview
 
-Flow is something like this:
+The goal of this project was to understand how real-world deployment pipelines work, including containerization, automation, and remote deployment.
+
+---
+
+## 🏗️ Architecture
 
 ```text
-My code → GitHub → GitHub Actions → EC2 → Docker → Live Website
+Developer → GitHub → GitHub Actions → SSH → AWS EC2 → Docker → Live Application
 ```
-
-So whenever I update my code:
-
-* GitHub runs a workflow
-* Builds Docker image
-* Connects to my EC2 server using SSH
-* Stops old container
-* Runs new container
-
-And boom, updated website is live.
 
 ---
 
-## 🛠️ Tech used
+## ⚙️ Tech Stack
 
 * Linux (WSL + EC2)
 * Docker
@@ -36,82 +30,81 @@ And boom, updated website is live.
 
 ---
 
-## 🐳 Docker part
+## 🔄 CI/CD Workflow
 
-I used a simple Dockerfile:
-
-* Base image → nginx
-* Copied my website files into nginx directory
-
-Commands I used:
-
-```bash
-docker build -t cicd-app .
-docker run -d -p 5000:80 --name cicd-container cicd-app
-```
+1. Code is pushed to GitHub
+2. GitHub Actions triggers the workflow
+3. Workflow connects to EC2 using SSH
+4. Existing container is stopped and removed
+5. New Docker image is built
+6. Updated container is deployed
 
 ---
 
-## ⚙️ CI/CD part
+## 🐳 Docker Setup
 
-I created a GitHub workflow using YAML file.
+### Dockerfile
 
-Whenever I push code:
-
-* It runs automatically
-* Connects to EC2 using SSH
-* Pulls latest code
-* Rebuilds container
-
-This is basically CI + CD combined.
+* Base Image: Nginx
+* Application files copied into container
+* Health check added for reliability
 
 ---
 
-## 🔐 Secrets used
+## 🚀 Deployment
 
-Added in GitHub:
-
-* EC2_HOST → my server IP
-* EC2_USER → ubuntu
-* EC2_KEY → private key
+Application is deployed automatically on EC2 using GitHub Actions and SSH.
 
 ---
 
-## 🌍 Live
+## 🌍 Live Application
 
-App is running here:
-
-http://YOUR_EC2_IP:5000
+👉 http://YOUR_EC2_IP:5000
 
 ---
 
-## 💥 Problems I faced (real ones)
+## 🔐 GitHub Secrets Used
 
-* GitHub login/token issue (push failed 😭)
-* Forgot to push updated workflow (big brain moment 💀)
-* SSH setup confusion
-* 502 Bad Gateway error
-* Port conflict (fixed by switching to 5000)
+* EC2_HOST → Public IP of EC2
+* EC2_USER → SSH user (ubuntu)
+* EC2_KEY → Private key
 
 ---
 
-## 🧠 What I learned
+## 💥 Challenges Faced
 
-* How Docker actually works
-* What CI/CD really means (not just theory)
-* How GitHub Actions works internally
-* How to deploy apps on AWS
-* How to debug real issues instead of copy-paste
-
----
-
-## 🚀 Next plan
-
-* Add domain + HTTPS
-* Try Docker Compose
-* Add monitoring (Prometheus/Grafana)
-* Improve UI (this one is ugly rn 😂)
+* GitHub authentication issues during push
+* CI/CD workflow not triggering due to incorrect setup
+* SSH configuration and access issues
+* Port conflicts (port 80 already in use)
+* Container not starting due to incorrect configuration
 
 ---
 
-This is my first proper DevOps project where I actually understood what’s happening instead of just following steps.
+## 🧠 Key Learnings
+
+* Understanding CI/CD pipeline automation
+* Docker container lifecycle (build, run, stop, remove)
+* Difference between local and production environments
+* Debugging real-world deployment issues
+* Importance of correct port mapping and configuration
+
+---
+
+## 🔥 Improvements Implemented
+
+* Added Docker health checks to ensure container reliability
+* Automated deployment using GitHub Actions
+* Structured project for scalability and clarity
+
+---
+
+## 🚀 Future Improvements
+
+* Add domain name and HTTPS (SSL)
+* Implement monitoring (Prometheus + Grafana)
+* Use Docker Compose for multi-container setup
+
+---
+
+This project helped me move beyond basic setups and understand how deployment and automation work in real environments.
